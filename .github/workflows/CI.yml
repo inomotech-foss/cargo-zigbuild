@@ -26,13 +26,13 @@ jobs:
   test:
     name: Test Suite
     runs-on: ${{ matrix.os }}
-    continue-on-error: ${{ matrix.zig == 'master' || matrix.toolchain == 'nightly' || matrix.os == 'windows-latest' }}
+    continue-on-error: ${{ matrix.zig == 'master' || matrix.toolchain == 'nightly-2025-03-09' || matrix.os == 'windows-latest' }}
     strategy:
       # If one platform fails, allow the rest to keep testing if `CI-no-fail-fast` label is present
       fail-fast: ${{ !contains(github.event.pull_request.labels.*.name, 'CI-no-fail-fast') }}
       matrix:
         os: [ubuntu-latest, macos-13, windows-latest]
-        toolchain: [1.74.0, stable, nightly]
+        toolchain: [1.74.0, stable, 'nightly-2025-03-09']
         zig: [0.10.1, 0.13.0, master]
         exclude:
           # Only test MSRV with zig stable version
@@ -146,11 +146,11 @@ jobs:
           cargo run zigbuild --target x86_64-unknown-linux-gnu
           ldd -r -v ./target/x86_64-unknown-linux-gnu/debug/cargo-zigbuild
       - name: Linux - Test x86_64 glibc build
-        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.toolchain == 'stable' || matrix.toolchain == 'nightly') }}
+        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.toolchain == 'stable' || matrix.toolchain == 'nightly-2025-03-09') }}
         run: |
           cargo run zigbuild --target x86_64-unknown-linux-gnu.2.17
       - name: Linux - Test x86_64 glibc run
-        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.toolchain == 'stable' || matrix.toolchain == 'nightly') }}
+        if: ${{ matrix.os == 'ubuntu-latest' && (matrix.toolchain == 'stable' || matrix.toolchain == 'nightly-2025-03-09') }}
         uses: addnab/docker-run-action@v3
         with:
           image: centos:7
